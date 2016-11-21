@@ -4,36 +4,20 @@ const canvas = document.getElementById('canvas');
 let scene = new THREE.Scene();
 let camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
 let renderer = new THREE.WebGLRenderer({canvas, antialias: true});
+
+// background colour
 renderer.setClearColor(0x6E5ACF);
 
-onWindowResize();
 camera.translateZ(12);
-camera.translateY(9);
-camera.rotateX(-Math.PI/10);
+camera.translateY(15);
+camera.rotateX(-Math.PI/8);
+
+onWindowResize();
 
 
-let planeGeometry = new THREE.PlaneGeometry(30, 6);
-let planeMaterial = new THREE.MeshBasicMaterial({
-  color: 0x00EEA6,
-  side: THREE.DoubleSide
-});
-let plane = new THREE.Mesh(planeGeometry, planeMaterial);
-scene.add(plane);
-plane.rotateX(Math.PI/2);
+//////////////////////////// pythagoras tree ///////////////////////////////////
 
-
-const cubeLength = 10;
-let cubeGeometry = new THREE.BoxGeometry(cubeLength, cubeLength, cubeLength);
-let cubeMaterial = new THREE.MeshBasicMaterial({
-  color: 0x999999,
-  wireframe: true
-});
-let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-cube.translateY(cubeLength/2);
-scene.add(cube);
-
-
-const len = 2;
+const len = 1;
 let matA = new THREE.LineBasicMaterial({color: 0xFF7A00}); // orange
 let matB = new THREE.LineBasicMaterial({color: 0xA50061}); // red
 let geometry = new THREE.Geometry();
@@ -51,11 +35,9 @@ branchA.translateY(len);
 branchB.translateY(len);
 let branchAPrime = branchB.clone();
 let branchBPrime = branchB.clone();
-let forkLeft = branchA.clone().rotateX(Math.PI/8);
-let forkRight = branchA.clone().rotateX(-Math.PI/8);
 
-branchAPrime.add(forkLeft.clone());
-branchAPrime.add(forkRight.clone());
+branchAPrime.add(branchA.clone().rotateX(Math.PI/8));
+branchAPrime.add(branchA.clone().rotateX(-Math.PI/8));
 branchBPrime.add(branchB.clone());
 
 let grammar = {
@@ -63,33 +45,73 @@ let grammar = {
   b: branchBPrime
 }
 
-// axiom
-tree.add(branchA.clone());
-
 function growTree(tree, n) {
   if (n === 0) {
     return;
   }
-  let clonedTree = tree.clone();
-
-  clonedTree.children.forEach(child => {
+  for (let i = tree.children.length-1; i >= 0; i--) {
+    let child = tree.children[i];
     let growth = grammar[child.name].clone();
-
     growth.rotation.copy(child.rotation);
-    tree.add(growth);
+
+    if (child.name === 'a') {
+      tree.add(growth);
+      growTree(growth, n-1);
+    }
+    else if (child.name === 'b') {
+      child.children.forEach(child => {
+        let clone = child.clone();
+        clone.rotation.copy(child.rotation);
+        growth.children[0].add(clone);
+      });
+      tree.add(growth);
+    }
     tree.remove(child);
-
-    growTree(growth, n-1);
-  });
+  }
+  growTree(tree, n-1);
 }
-growTree(tree, 5);
 
-tree.translateY(-len);
+// axiom
+tree.add(branchA.clone());
+
+tree0 = tree.clone().translateY(-len).translateX(-10);
+tree1 = tree.clone().translateY(-len).translateX(10);
+growTree(tree0, 2);
+growTree(tree1, 3);
+scene.add(tree0);
+scene.add(tree1);
+
+tree = tree.clone().translateY(-len);
+growTree(tree, 5);
 scene.add(tree);
 
-scene.add(branchA.clone().translateX(-10).translateY(-len));
-scene.add(branchAPrime.clone().translateX(10).translateY(-len));
 
+//////////////////////////// background ////////////////////////////////////////
+
+let planeGeometry = new THREE.PlaneGeometry(30, 6);
+let planeMaterial = new THREE.MeshBasicMaterial({
+  color: 0x00EEA6,
+  side: THREE.DoubleSide
+});
+let plane = new THREE.Mesh(planeGeometry, planeMaterial);
+scene.add(plane);
+plane.rotateX(Math.PI/2);
+
+
+//////////////////////////// scaffolding ///////////////////////////////////////
+
+const cubeLength = 10;
+let cubeGeometry = new THREE.BoxGeometry(cubeLength, cubeLength, cubeLength);
+let cubeMaterial = new THREE.MeshBasicMaterial({
+  color: 0x999999,
+  wireframe: true
+});
+let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+cube.translateY(cubeLength/2);
+scene.add(cube);
+
+
+//////////////////////////// animation loop ////////////////////////////////////
 
 function render() {
   tree.rotation.y += 0.003;
@@ -102,7 +124,7 @@ function render() {
 render();
 
 
-//////////////////////////// etc ///////////////////////////////////////////////
+//////////////////////////// helpers ///////////////////////////////////////////
 
 function onWindowResize() {
   const width = window.innerWidth;
