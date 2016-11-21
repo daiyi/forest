@@ -50,19 +50,40 @@ branchB.name = 'b';
 branchA.translateY(len);
 branchB.translateY(len);
 let branchAPrime = branchB.clone();
+let branchBPrime = branchB.clone();
 let forkLeft = branchA.clone().rotateX(Math.PI/8);
 let forkRight = branchA.clone().rotateX(-Math.PI/8);
 
 branchAPrime.add(forkLeft.clone());
 branchAPrime.add(forkRight.clone());
+branchBPrime.add(branchB.clone());
 
 let grammar = {
   a: branchAPrime,
-  b: branchB
+  b: branchBPrime
 }
 
 // axiom
 tree.add(branchA.clone());
+
+function growTree(tree, n) {
+  if (n === 0) {
+    return;
+  }
+  let clonedTree = tree.clone();
+
+  clonedTree.children.forEach(child => {
+    let growth = grammar[child.name].clone();
+
+    growth.rotation.copy(child.rotation);
+    tree.add(growth);
+    tree.remove(child);
+
+    growTree(growth, n-1);
+  });
+}
+growTree(tree, 5);
+
 tree.translateY(-len);
 scene.add(tree);
 
