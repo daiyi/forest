@@ -1,5 +1,6 @@
 const three = THREE; // guh caps
 const canvas = document.getElementById('canvas');
+const CAMERA_ROTATION_SPEED = Math.PI/80;
 
 let scene = new THREE.Scene();
 let camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
@@ -8,9 +9,9 @@ let renderer = new THREE.WebGLRenderer({canvas, antialias: true});
 // background colour
 renderer.setClearColor(0x6E5ACF);
 
-camera.translateZ(12);
-camera.translateY(15);
-camera.rotateX(-Math.PI/8);
+camera.translateZ(30);
+camera.translateY(-5);
+camera.rotateX(Math.PI/12);
 
 onWindowResize();
 
@@ -85,7 +86,7 @@ function growTree(tree, n, colorIndex) {
 tree.add(branchA.clone());
 
 tree.translateY(-len);
-growTree(tree, 8);
+growTree(tree, 9);
 scene.add(tree);
 
 
@@ -111,14 +112,14 @@ let cubeMaterial = new THREE.MeshBasicMaterial({
 });
 let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 cube.translateY(cubeLength/2);
-scene.add(cube);
+// scene.add(cube);
 
 
 //////////////////////////// animation loop ////////////////////////////////////
 
 function render() {
-  tree.rotation.y += 0.01;
-  cube.rotation.y += 0.01;
+  tree.rotation.y += CAMERA_ROTATION_SPEED;
+  cube.rotation.y += CAMERA_ROTATION_SPEED;
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);
