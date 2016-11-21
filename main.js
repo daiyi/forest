@@ -17,9 +17,9 @@ onWindowResize();
 
 //////////////////////////// pythagoras tree ///////////////////////////////////
 
-const len = 1;
-let matA = new THREE.LineBasicMaterial({color: 0xFF7A00}); // orange
-let matB = new THREE.LineBasicMaterial({color: 0xA50061}); // red
+const len = 0.5;
+let matA = new THREE.LineBasicMaterial({color: 0x000000});
+let matB = new THREE.LineBasicMaterial({color: 0x000000});
 let geometry = new THREE.Geometry();
 
 geometry.vertices.push(
@@ -45,44 +45,47 @@ let grammar = {
   b: branchBPrime
 }
 
-function growTree(tree, n) {
-  if (n === 0) {
-    return;
-  }
+function growTree(tree, n, colorIndex) {
+  if (n === 0) return;
+  !!colorIndex || (colorIndex = n);
+
   for (let i = tree.children.length-1; i >= 0; i--) {
     let child = tree.children[i];
     let growth = grammar[child.name].clone();
+
     growth.rotation.copy(child.rotation);
+    growth.rotateY(Math.random() * Math.PI * 2);
+    growth.material = new THREE.LineBasicMaterial({
+      color: getMatColor(colorIndex)
+    });
+    growth.children.forEach(child => {
+      child.material = new THREE.LineBasicMaterial({
+        color: getMatColor(colorIndex)
+      });
+    });
 
     if (child.name === 'a') {
-      tree.add(growth);
-      growTree(growth, n-1);
+      growTree(growth, n-1, colorIndex-1);
     }
-    else if (child.name === 'b') {
-      child.children.forEach(child => {
-        let clone = child.clone();
-        clone.rotation.copy(child.rotation);
-        growth.children[0].add(clone);
-      });
-      tree.add(growth);
-    }
+
+    child.children.forEach(child => {
+      let clone = child.clone();
+      clone.rotation.copy(child.rotation);
+      growth.children[0].add(clone);
+    });
+
+    tree.add(growth);
     tree.remove(child);
   }
-  growTree(tree, n-1);
+
+  growTree(tree, n-1, colorIndex);
 }
 
 // axiom
 tree.add(branchA.clone());
 
-tree0 = tree.clone().translateY(-len).translateX(-10);
-tree1 = tree.clone().translateY(-len).translateX(10);
-growTree(tree0, 2);
-growTree(tree1, 3);
-scene.add(tree0);
-scene.add(tree1);
-
-tree = tree.clone().translateY(-len);
-growTree(tree, 5);
+tree.translateY(-len);
+growTree(tree, 8);
 scene.add(tree);
 
 
@@ -114,8 +117,8 @@ scene.add(cube);
 //////////////////////////// animation loop ////////////////////////////////////
 
 function render() {
-  tree.rotation.y += 0.003;
-  cube.rotation.y += 0.003;
+  tree.rotation.y += 0.01;
+  cube.rotation.y += 0.01;
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);
