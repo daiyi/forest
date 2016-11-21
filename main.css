@@ -1,11 +1,37 @@
 body {
+  color: #fff;
+  font-family: courier new, courier, monospace;
+  font-size: 14px;
   margin: 0;
   padding: 0;
 }
 
 /* make the canvas the size of the viewport */
 canvas {
-  width: 100vw;
-  height: 100vh;
   display: block;
+  height: 100vh;
+  width: 100vw;
+}
+
+a {
+  border: 2px solid transparent;
+  text-decoration: none;
+}
+a:link, a:visited {
+  color: #fff;
+  border-bottom: 1px dotted;
+}
+a:focus {
+  border: 2px solid #000;
+}
+a:hover {
+  color: #00EEA6;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+footer {
+  bottom: 0.5em;
+  position: absolute;
+  right: 0.5em;
 }
