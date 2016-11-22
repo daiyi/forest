@@ -60,10 +60,10 @@ function PythagorasTree(size, branchLength = 0.5) {
 
 
 	let axiom = branchA.clone();
-	axiom.translateY(-branchLength);
 
 	let tree = new THREE.Object3D();
 	tree.add(axiom);
+	tree.translateY(branchLength * -1);
 
 	// face camera
 	tree.rotateY(Math.PI/2);
