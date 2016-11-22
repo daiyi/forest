@@ -30,6 +30,19 @@ a:hover {
   border-bottom: none;
 }
 
+.stats-box {
+  background-color: #000;
+  left: 0.5em;
+  padding: 5px;
+  position: absolute;
+  opacity: 0.4;
+  top: 0.5em;
+}
+#stats {
+  margin: 0;
+  padding: 0;
+}
+
 footer {
   bottom: 0.5em;
   position: absolute;

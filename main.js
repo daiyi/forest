@@ -65,12 +65,29 @@ render();
 
 
 //////////////////////////// helpers ///////////////////////////////////////////
+
+const STATS = document.getElementById('stats');
 const CAMERA_SPEED = 0.7;
 
 const KEYUP          = 38;
 const KEYDOWN        = 40;
 const KEYLEFT        = 37;
 const KEYRIGHT       = 39;
+
+
+function printStats() {
+  STATS.innerHTML = `           x      y      z 
+camera ${printCoord(camera.position)}
+`;
+}
+
+/** coord is an object that represents (x,y,z)
+ */
+function printCoord(coord) {
+  return Object.values(coord).map(pos => {
+    return `${(pos<0)? '': ' '} ${pos.toPrecision((Math.abs(pos/1)<1) ? 2 : 3).toString()}`
+  });
+}
 
 function onWindowResize() {
   const width = window.innerWidth;
@@ -92,13 +109,15 @@ function onArrowKey(e) {
       }
       break;
     case KEYDOWN:
-      if (camera.rotation.x < Math.PI/6) {
+      if (camera.rotation.x < Math.PI/4) {
         camera.rotation.x += Math.PI/2 * CAMERA_ROTATION_SPEED;
         camera.position.y += CAMERA_SPEED * -1;
       }
       break;
   }
+  printStats();
 }
 
 window.addEventListener('resize', onWindowResize, false);
-document.addEventListener('keydown', onArrowKey);
+window.addEventListener('keydown', onArrowKey);
+window.addEventListener('load', printStats);
