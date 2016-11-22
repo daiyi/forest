@@ -35,9 +35,9 @@ function PythagorasTree(size, branchLength = 0.5) {
 
 	    growth.rotation.copy(child.rotation);
 	    growth.rotateY(Math.random() * Math.PI * 2);
-	    growth.material = new THREE.LineBasicMaterial({color: getMatColor(gen), linewidth: gen});
+	    growth.material = new THREE.LineBasicMaterial({color: getMatColor(gen)});
 	    growth.children.forEach(child => {
-	      child.material = new THREE.LineBasicMaterial({color: getMatColor(gen), linewidth: gen});
+	      child.material = new THREE.LineBasicMaterial({color: getMatColor(gen)});
 	    });
 
 	    child.children.forEach((child, i) => {
