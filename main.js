@@ -65,6 +65,12 @@ render();
 
 
 //////////////////////////// helpers ///////////////////////////////////////////
+const CAMERA_SPEED = 0.7;
+
+const KEYUP          = 38;
+const KEYDOWN        = 40;
+const KEYLEFT        = 37;
+const KEYRIGHT       = 39;
 
 function onWindowResize() {
   const width = window.innerWidth;
@@ -75,4 +81,24 @@ function onWindowResize() {
 	renderer.setSize(width, height);
 }
 
+function onArrowKey(e) {
+  const key = e.keyCode;
+
+  switch (key) {
+    case KEYUP:
+      if (camera.rotation.x > Math.PI/6 * -1) {
+        camera.rotation.x += Math.PI/2 * CAMERA_ROTATION_SPEED * -1;
+        camera.position.y += CAMERA_SPEED;
+      }
+      break;
+    case KEYDOWN:
+      if (camera.rotation.x < Math.PI/6) {
+        camera.rotation.x += Math.PI/2 * CAMERA_ROTATION_SPEED;
+        camera.position.y += CAMERA_SPEED * -1;
+      }
+      break;
+  }
+}
+
 window.addEventListener('resize', onWindowResize, false);
+document.addEventListener('keydown', onArrowKey);
