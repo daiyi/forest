@@ -10,16 +10,21 @@ let renderer = new THREE.WebGLRenderer({canvas, antialias: true});
 // background colour
 renderer.setClearColor(0x6E5ACF);
 
-camera.translateZ(20);
-camera.translateY(30);
-camera.rotateX(-Math.PI/8);
+camera.translateZ(30);
+camera.translateY(4);
+camera.rotateX(Math.PI/8);
 
 onWindowResize();
 
 //////////////////////////// trees /////////////////////////////////////////////
 
-let tree = PythagorasTree(6, 0.5);
-scene.add(tree);
+let pyTree = PythagorasTree(6, 0.4);
+pyTree.translateZ(8);
+scene.add(pyTree);
+
+let evergreen = EvergreenTree(8, 0.5);
+evergreen.translateZ(-8);
+scene.add(evergreen);
 
 
 //////////////////////////// background ////////////////////////////////////////
@@ -49,8 +54,8 @@ cube.translateY(CUBELENGTH/2);
 //////////////////////////// animation loop ////////////////////////////////////
 
 function render() {
-  tree.rotation.y += CAMERA_ROTATION_SPEED;
-  // cube.rotation.y += CAMERA_ROTATION_SPEED;
+  pyTree.rotation.y += CAMERA_ROTATION_SPEED;
+  evergreen.rotation.y += CAMERA_ROTATION_SPEED;
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);
