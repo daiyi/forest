@@ -69,14 +69,14 @@ render();
 const STATS = document.getElementById('stats');
 const CAMERA_SPEED = 0.7;
 
-const KEYUP          = 38;
-const KEYDOWN        = 40;
-const KEYLEFT        = 37;
-const KEYRIGHT       = 39;
+const KEYUP    = 38;
+const KEYDOWN  = 40;
+const KEYLEFT  = 37;
+const KEYRIGHT = 39;
 
 
 function printStats() {
-  STATS.innerHTML = `           x      y      z 
+  STATS.innerHTML = `           x      y      z
 camera ${printCoord(camera.position)}
 `;
 }
@@ -98,7 +98,7 @@ function onWindowResize() {
 	renderer.setSize(width, height);
 }
 
-function onArrowKey(e) {
+function onKeyDown(e) {
   const key = e.keyCode;
 
   switch (key) {
@@ -119,5 +119,5 @@ function onArrowKey(e) {
 }
 
 window.addEventListener('resize', onWindowResize, false);
-window.addEventListener('keydown', onArrowKey);
+window.addEventListener('keydown', onKeyDown);
 window.addEventListener('load', printStats);
