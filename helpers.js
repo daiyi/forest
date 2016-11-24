@@ -28,9 +28,10 @@ function initCanvas(canvas) {
   return {scene, renderer, camera};
 }
 
-function initCamera(camera) {
-  camera.translateZ(30);
-  camera.translateY(4);
+function initCamera(camera, x=0, y=4, z=30) {
+  camera.translateX(x);
+  camera.translateY(y);
+  camera.translateZ(z);
   camera.rotateX(Math.PI/8);
 }
 

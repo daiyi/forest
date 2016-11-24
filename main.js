@@ -12,12 +12,12 @@ addLandscape(scene, landscapeSize);
 // pyTree.rotateY(Math.PI/2); // face camera
 // scene.add(pyTree);
 
-const forestSize = 1;
+const forestSize = 5;
 let forest = [];
 
 for (let i = 0; i < forestSize; i++) {
-  forest[i] = EvergreenTree();
-  // forest[i].translateX(Math.random() * landscapeSize - landscapeSize/2);
+  forest[i] = EvergreenTree(7);
+  forest[i].translateX(Math.random() * landscapeSize - landscapeSize/2);
   scene.add(forest[i]);
 }
 

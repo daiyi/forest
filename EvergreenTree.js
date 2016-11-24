@@ -5,9 +5,22 @@ function EvergreenTree(size=7, length = 0.7) {
 	tree.name = "EvergreenTree";
 	tree.add(getAxiom(grammar));
 	tree.translateY(length * -1);
-
 	growTree(tree, size);
-	return tree;
+	tree.updateMatrixWorld();
+
+	let combinedGeo = new THREE.Geometry();
+	tree.traverse(branch => {
+		if (branch.geometry) {
+			branch.geometry.vertices.forEach(vector => branch.localToWorld(vector));
+			combinedGeo.merge(branch.geometry);
+
+			// must transform back to local because children rely on local position to find
+			// their own world positioning
+			branch.geometry.vertices.forEach(vector => branch.worldToLocal(vector));
+		}
+	});
+
+	return new THREE.LineSegments(combinedGeo, new THREE.LineBasicMaterial({color: "#000000"}));
 
 
 	function getBranch(name) {
