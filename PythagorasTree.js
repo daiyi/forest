@@ -2,6 +2,7 @@ function PythagorasTree(size, length = 0.5) {
 	let grammar = getGrammar();
 	let tree = new THREE.Object3D();
 
+	tree.name = "PythagorasTree";
 	tree.add(getAxiom(grammar));
 	tree.translateY(length * -1);
 

@@ -1,7 +1,8 @@
-function EvergreenTree(size, length = 0.2) {
+function EvergreenTree(size=7, length = 0.7) {
 	let grammar = getGrammar();
 	let tree = new THREE.Object3D();
 
+	tree.name = "EvergreenTree";
 	tree.add(getAxiom(grammar));
 	tree.translateY(length * -1);
 
@@ -18,7 +19,7 @@ function EvergreenTree(size, length = 0.2) {
 			new THREE.Vector3(0, length, 0)
 		);
 
-	  let branch = new THREE.Line(geometry.clone(), material);
+	  let branch = new THREE.Line(geometry, material);
 		branch.name = name;
 		branch.translateY(length);
 

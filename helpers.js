@@ -9,6 +9,11 @@ const KEYDOWN  = 40;
 const KEYLEFT  = 37;
 const KEYRIGHT = 39;
 
+const KEY_W = 87;
+const KEY_A = 65;
+const KEY_S = 83;
+const KEY_D = 68;
+
 
 /* canvas {Object} - DOM node for the <canvas> to render contents in
  */
@@ -29,8 +34,8 @@ function initCamera(camera) {
   camera.rotateX(Math.PI/8);
 }
 
-function addLandscape(scene) {
-  let planeGeometry = new THREE.PlaneGeometry(30, 6);
+function addLandscape(scene, width=30, height=6) {
+  let planeGeometry = new THREE.PlaneGeometry(width, height);
   let planeMaterial = new THREE.MeshBasicMaterial({
     color: 0x00EEA6,
     side: THREE.DoubleSide
@@ -80,11 +85,13 @@ function onKeyDown(e) {
 
   switch (key) {
     case KEYUP:
+    case KEY_W:
       if (camera.rotation.x > Math.PI/6 * -1) {
         camera.rotation.x += Math.PI/2 * CAMERA_ROTATION_SPEED * -1;
         camera.position.y += CAMERA_SPEED;
       }
       break;
+    case KEY_S:
     case KEYDOWN:
       if (camera.rotation.x < Math.PI/4) {
         camera.rotation.x += Math.PI/2 * CAMERA_ROTATION_SPEED;
@@ -92,5 +99,5 @@ function onKeyDown(e) {
       }
       break;
   }
-  printStats();
+  // printStats();
 }
