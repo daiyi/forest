@@ -1,58 +1,23 @@
-const canvas = document.getElementById('canvas');
-const CAMERA_ROTATION_SPEED = Math.PI/170;
-const CUBELENGTH = 10;
-const three = THREE; // guh caps
+let {scene, renderer, camera} = initCanvas(document.getElementById('canvas'));
 
-let scene = new THREE.Scene();
-let camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-let renderer = new THREE.WebGLRenderer({canvas, antialias: true});
-
-// background colour
-renderer.setClearColor(0x6E5ACF);
-
-camera.translateZ(30);
-camera.translateY(4);
-camera.rotateX(Math.PI/8);
-
+initCamera(camera);
 onWindowResize();
 
-//////////////////////////// trees /////////////////////////////////////////////
+addLandscape(scene);
+addScaffoldingCube(scene, 15);
 
 let pyTree = PythagorasTree(6, 0.4);
-pyTree.translateZ(8);
+pyTree.translateX(8);
+pyTree.rotateY(Math.PI/2); // face camera
 scene.add(pyTree);
 
 let evergreen = EvergreenTree(8, 0.5);
-evergreen.translateZ(-8);
+evergreen.translateX(-8);
+evergreen.rotateY(Math.PI/2); // face camera
 scene.add(evergreen);
 
 
-//////////////////////////// background ////////////////////////////////////////
-
-let planeGeometry = new THREE.PlaneGeometry(30, 6);
-let planeMaterial = new THREE.MeshBasicMaterial({
-  color: 0x00EEA6,
-  side: THREE.DoubleSide
-});
-let plane = new THREE.Mesh(planeGeometry, planeMaterial);
-plane.rotateX(Math.PI/2);
-scene.add(plane);
-
-
-//////////////////////////// scaffolding ///////////////////////////////////////
-
-let cubeGeometry = new THREE.BoxGeometry(CUBELENGTH, CUBELENGTH, CUBELENGTH);
-let cubeMaterial = new THREE.MeshBasicMaterial({
-  color: 0x999999,
-  wireframe: true
-});
-let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-cube.translateY(CUBELENGTH/2);
-// scene.add(cube);
-
-
-//////////////////////////// animation loop ////////////////////////////////////
-
+// Animation loop
 function render() {
   pyTree.rotation.y += CAMERA_ROTATION_SPEED;
   evergreen.rotation.y += CAMERA_ROTATION_SPEED;
@@ -63,60 +28,6 @@ function render() {
 
 render();
 
-
-//////////////////////////// helpers ///////////////////////////////////////////
-
-const STATS = document.getElementById('stats');
-const CAMERA_SPEED = 0.7;
-
-const KEYUP    = 38;
-const KEYDOWN  = 40;
-const KEYLEFT  = 37;
-const KEYRIGHT = 39;
-
-
-function printStats() {
-  STATS.innerHTML = `           x      y      z
-camera ${printCoord(camera.position)}
-`;
-}
-
-/** coord is an object that represents (x,y,z)
- */
-function printCoord(coord) {
-  return Object.values(coord).map(pos => {
-    return `${(pos<0)? '': ' '} ${pos.toPrecision((Math.abs(pos/1)<1) ? 2 : 3).toString()}`
-  });
-}
-
-function onWindowResize() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-
-	camera.aspect = width / height;
-	camera.updateProjectionMatrix();
-	renderer.setSize(width, height);
-}
-
-function onKeyDown(e) {
-  const key = e.keyCode;
-
-  switch (key) {
-    case KEYUP:
-      if (camera.rotation.x > Math.PI/6 * -1) {
-        camera.rotation.x += Math.PI/2 * CAMERA_ROTATION_SPEED * -1;
-        camera.position.y += CAMERA_SPEED;
-      }
-      break;
-    case KEYDOWN:
-      if (camera.rotation.x < Math.PI/4) {
-        camera.rotation.x += Math.PI/2 * CAMERA_ROTATION_SPEED;
-        camera.position.y += CAMERA_SPEED * -1;
-      }
-      break;
-  }
-  printStats();
-}
 
 window.addEventListener('resize', onWindowResize, false);
 window.addEventListener('keydown', onKeyDown);
